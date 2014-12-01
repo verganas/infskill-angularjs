@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+<div data-ng-controller="customfilter">
+    <input data-ng-model="mydata.name"/>
+    {{mydata.name | charfilter:10}}
+</div>
+<script src="http://code.angularjs.org/1.2.9/angular.min.js"></script>
+<script>
+    angular.module("myapp", []).
+    filter("charfilter", function() {
+        return function(input, length){
+            if (!input)
+                return '';
+            if (!length)
+                length = 10;
+
+            if (input.length <= length)
+                return input;
+            else
+                return input.substring(0,length)+'...';
+        }
+    }).
+    controller("customfilter", function ($scope) {
+        // nothing
+    });
+</script>
+</body>
+</html>
