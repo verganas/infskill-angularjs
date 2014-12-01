@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+<div data-ng-controller="filternames">
+    <input data-ng-model="myfilter.name">
+    <input data-ng-model="myfilter.age">
+
+    <div data-ng-repeat="person in mydata.persons | filter:myfilter">
+        {{ person }}
+    </div>
+</div>
+<script src="http://code.angularjs.org/1.2.9/angular.min.js"></script>
+<script>
+    angular.module("myapp", [])
+            .controller("filternames", function ($scope) {
+                $scope.mydata =
+                {
+                    persons: [
+                        {name: "Jack", age: 10},
+                        {name: "Jane", age: 10},
+                        {name: "Jancline", age: 20}
+                    ]
+                };
+            });
+</script>
+</body>
+</html>

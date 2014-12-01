@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+<div data-ng-controller="filternames">
+    <input data-ng-model="myfilter.name">
+    <input data-ng-model="myfilter.age">
+    <!-- Order by Age -->
+    <div data-ng-repeat="person in mydata.persons | filter:myfilter | orderBy: 'age' ">
+        {{ person }}
+    </div>
+</div>
+<script src="http://code.angularjs.org/1.2.9/angular.min.js"></script>
+<script>
+    angular.module("myapp", [])
+            .controller("filternames", function ($scope) {
+                $scope.mydata =
+                {
+                    persons: [
+                        {name: "Jack", age: 15},
+                        {name: "Jane", age: 13},
+                        {name: "Jancline", age: 25},
+                        {name: "George", age: 35},
+                        {name: "John", age: 40},
+                        {name: "Peter", age: 32},
+                        {name: "Steve", age: 42},
+                        {name: "Andrew", age: 10},
+                        {name: "Brian", age: 20}
+                    ]
+                };
+            });
+</script>
+</body>
+</html>
