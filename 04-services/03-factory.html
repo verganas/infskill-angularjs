@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+<div data-ng-controller="MainController">
+
+</div>
+<script src="http://code.angularjs.org/1.2.9/angular.min.js"></script>
+<script>
+    // Factory can use dependency injection.
+    // Factory can return a primitive, object or function.
+    // Called once and it's result is stored internally to be injected where needed.
+    angular.module('myapp', [])
+        .factory('myFactory1', function() {
+            return {
+                mydata: "Some data",
+                getdata: function () {
+                    return this.mydata;
+                }
+            }
+        })
+        .factory('myFactory2', function() {
+            // Same functionality as 1 but encapsulates the data using closure.
+            var myData = "Hidden data";
+            return {
+                getData: function(){
+                    return myData;
+                }
+            }
+        })
+        .controller('MainController', ['myFactory1','myFactory2',function(myFactory1, myFactory2) {
+            myFactory1.mydata = "I can change this!";
+            console.log(myFactory1.getdata());
+            console.log(myFactory2.getData());
+
+        }]);
+</script>
+</body>
+</html>

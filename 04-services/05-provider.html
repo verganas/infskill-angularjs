@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+<div data-ng-controller="MainController">
+
+</div>
+<script src="http://code.angularjs.org/1.2.9/angular.min.js"></script>
+<script>
+    // It's the base of all the rest services types. Rest are considered syntactic sugars of Provider.
+    // Provider can use dependency injection.
+    // It's name can't end in Provider (the name + Provider is used at configuration injection).
+    // It can be configured at configuration phase.
+
+    angular.module('myapp', [])
+        .provider('myTest', function() {
+            var myString = "this is some other data";
+            var addToString = function(newStr){
+                myString += newStr
+            };
+            return {
+                $get: function() {
+                    return {
+                        getData: function() {
+                            return "String contains:"  + myString;
+                        },
+                        addData: addToString
+                    }
+                },
+                setData: function (data) { // Used at configuration
+                    myString = data;
+                }
+            }
+        })
+        .controller('MainController', ['myTest', function(myTest) {
+            console.log(myTest.getData());
+        }])
+        .config(function(myTestProvider){ // Name is providerName + Provider
+            myTestProvider.setData("Changed the data");
+        });
+</script>
+</body>
+</html>

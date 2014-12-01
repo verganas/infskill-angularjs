@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+<div data-ng-controller="MainController">
+
+</div>
+<script src="http://code.angularjs.org/1.2.9/angular.min.js"></script>
+<script>
+    // Used to modify existing services. This can be either 3rd party or our own where we don't
+    // want to modify it's code directly.
+    // $provide is what AngularJS uses to create all of its services. We'll use it's decorate method.
+    // $delegate is the original instance of the service. Note since it's the service have access only
+    // to it's public API.
+
+    angular.module('myapp', [])
+        .factory('myFactory', function() {
+            var myString = "this is some other data";
+            var addToString = function(newStr){
+                myString += newStr
+            };
+            return {
+                getData: function() {
+                    return "String contains:"  + myString;
+                },
+                addData: addToString
+            };
+        })
+        .controller('MainController', ['myFactory', function(myFactory) {
+            console.log(myFactory.reverseString());
+        }])
+        .config(function($provide){
+            $provide.decorator('myFactory', function($delegate) {
+                $delegate.reverseString = function(){
+                    return $delegate.getData().split('').reverse().join('');
+                }
+                return $delegate;
+            })
+        });
+</script>
+</body>
+</html>

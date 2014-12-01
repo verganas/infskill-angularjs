@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+<div data-ng-controller="MainController">
+
+</div>
+<script src="http://code.angularjs.org/1.2.9/angular.min.js"></script>
+<script>
+    // Note that value can't use dependencies.
+    // This type of service can be modified by a decorator.
+    // Use cases include configuration data like a baseUrl
+    angular.module("myapp", [])
+            .value('clientId', {name:'Something', id:'cef2223ff123fd'})
+            .controller('MainController', ['clientId', function (clientId) {
+                console.log(clientId.id, clientId.name);
+            }]);
+</script>
+</body>
+</html>

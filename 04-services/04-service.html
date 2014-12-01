@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+<div data-ng-controller="MainController">
+
+</div>
+<script src="http://code.angularjs.org/1.2.9/angular.min.js"></script>
+<script>
+    // Service can use dependency injection.
+    // Service accepts a constructor function which it calls using the new operator.
+    // new is called once and it's result is stored internally to be injected where needed.
+    // Used a lot with CoffeeScript, cause CoffeeScript uses javascript classes lots.
+
+    // Our constructor function
+    var serviceClass = function(){
+        console.log('Inside service!');
+        var myData = "My sacred data!";
+        this.getData = function (){
+            return myData;
+        }
+    }
+
+    angular.module('myapp', [])
+        .service('myService', serviceClass)
+        // Can also be written as:
+        .service('myService2',function() {
+            return new serviceClass();
+        })
+        // Providing the constructor function inline:
+        .service('myService3', function(){
+            console.log('Inside service!');
+            var myData = "My sacred data!";
+            this.getData = function (){
+                return myData;
+            }
+        })
+        .controller('MainController', ['myService','myService2','myService3',
+            function(myService, myService2,myService3) {
+            console.log(myService.getData());
+            console.log(myService2.getData());
+            console.log(myService3.getData());
+        }]);
+</script>
+</body>
+</html>

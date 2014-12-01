@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+<div data-ng-controller="MainController">
+
+</div>
+<script src="http://code.angularjs.org/1.2.9/angular.min.js"></script>
+<script>
+    // Note that constant can't use dependencies.
+    // This type of service can't be modified by a decorator.
+    // Use cases include configuration data like a baseUrl
+    angular.module("myapp", [])
+            .constant('constService',{attr: "this is const data!"})
+            .controller('MainController', function ($scope, constService) {
+                console.log(constService)
+            });
+</script>
+</body>
+</html>
