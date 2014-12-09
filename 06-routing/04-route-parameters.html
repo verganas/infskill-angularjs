@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+
+<ng-view></ng-view>
+
+<script src="http://code.angularjs.org/1.2.9/angular.js"></script>
+<script src="http://code.angularjs.org/1.2.9/angular-route.js"></script>
+
+<script>
+    var app = angular.module("myapp",['ngRoute']);
+    app.controller('MainController',function($scope,$routeParams){
+        /*
+            Note that angular populates the routeParams object with route parameters like :param1,
+            but also with the query parameters as:
+
+            http://localhost:63342/infskill-angularjs/06-routing/03-route-parameters.html#/test/123321asdf?param2=test
+
+            Results to: Object {param2: "test", param1: "123321asdf"}
+        */
+        console.log($routeParams);
+        $scope.somedata=$routeParams.param1;
+    });
+
+    /*
+        He suggests that it's better to define the controller inside the template and
+        not at the route configuration.
+     */
+    app.config(function($routeProvider){
+        $routeProvider
+            .when('/', {templateUrl: 'view.html'})
+            .when('/test/:param1', {templateUrl: 'view2.html'})
+            .otherwise({template:"Couldn't match a route!"});
+    });
+</script>
+
+<script type="text/ng-template" id="view.html">
+    <div ng-controller="MainController">
+        <div>
+            This is the view with some data: {{somedata}}
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="view2.html">
+    <div ng-controller="MainController">
+        <div>
+            This is the view2 with param data: {{somedata}}
+        </div>
+    </div>
+</script>
+
+</body>
+</html>

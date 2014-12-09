@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+    <div ng-controller="MainController">
+        <ng-view></ng-view>
+    </div>
+
+<script src="http://code.angularjs.org/1.2.9/angular.js"></script>
+<script src="http://code.angularjs.org/1.2.9/angular-route.js"></script>
+<script>
+    var app = angular.module("myapp",['ngRoute']);
+    var mainController = app.controller('MainController',function($scope,$q, $timeout){
+        $scope.myData = "This is some data";
+
+
+    });
+
+    /*
+        We add a 2nd promise return function. Notice that this is defined directly on
+        the controller and not inside it's scope. This pattern is a bit cleaner than defining it
+        "inline" inside the routeProvider configuration.
+
+        The view will display when both promises resolve.
+     */
+
+    mainController.data2 = function($q, $timeout){
+        var defer = $q.defer();
+        $timeout(function() {
+            defer.resolve();
+            console.log('finished resolve 2!');
+        }, 6000);
+        return defer.promise;
+    };
+
+    app.config(function($routeProvider) {
+        $routeProvider
+            .when('/',
+            {
+                templateUrl: 'view.html',
+                resolve: {
+                    data1: function($q, $timeout){
+                        var defer = $q.defer();
+                        $timeout(function() {
+                            defer.resolve();
+                            console.log('finished resolve 1!');
+                            }, 5000);
+                        return defer.promise;
+                    },
+                    data2: mainController.data2
+                }
+             }
+            )
+        .otherwise({template:'Couldn\'t match a route!'});
+    });
+</script>
+
+<script type="text/ng-template" id="view.html">
+    <div ng-controller="MainController">
+        <div>
+            This is the view with some data: {{myData}}
+        </div>
+    </div>
+</script>
+
+</body>
+</html>

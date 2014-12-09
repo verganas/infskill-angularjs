@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+    <div ng-controller="MainController">
+        {{ myData }}
+    </div>
+
+<script src="http://code.angularjs.org/1.2.9/angular.js"></script>
+<script>
+    var app = angular.module("myapp",[]);
+    app.controller('MainController',function($scope,$q, $timeout){
+        $scope.myData = "Old data";
+
+        var defer = $q.defer();
+
+        defer.promise
+            .then(function(val){
+                $scope.myData = val;
+            });
+
+        $timeout(function() {
+            defer.resolve("New data!");
+         }, 5000);
+    });
+</script>
+
+</body>
+</html>

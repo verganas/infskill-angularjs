@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+    <div ng-controller="MainController">
+        <ng-view></ng-view>
+    </div>
+
+<script src="http://code.angularjs.org/1.2.9/angular.js"></script>
+<script src="http://code.angularjs.org/1.2.9/angular-route.js"></script>
+<script>
+    var app = angular.module("myapp",['ngRoute']);
+    app.controller('MainController',function($scope,$rootScope, $route, $location){
+        $scope.myData = "This is some data";
+
+        $scope.navigate = function() {
+            console.log($scope);
+            $location.path("/newroute");
+        }
+
+        $rootScope.$on("$routeChangeStart", function(event, current, previous, rejection) {
+            console.log("Route Change Start!");
+            console.log(event, current, previous, rejection);
+        });
+
+        $rootScope.$on("$routeChangeSuccess", function(event, current, previous, rejection) {
+            console.log("Route Change Success!");
+            console.log(event, current, previous, rejection);
+        });
+    });
+
+    app.controller("OldController", function($scope, $route, $location) {
+
+    });
+
+    app.controller("NewController", function($scope, $template) {
+        console.log($scope, $template);
+    });
+
+    app.config(function($routeProvider, $locationProvider) {
+        $routeProvider
+            .when('/', {templateUrl:"oldview.html"})
+            .when('/newroute',
+            {
+                templateUrl: 'newview.html',
+                controller: "NewController",
+                resolve: {
+                    data1: function($q, $timeout){
+                        var defer = $q.defer();
+                        $timeout(function() {
+                            defer.resolve();
+                            }, 2000);
+                        return defer.promise;
+                    }
+                }
+             }
+            )
+        .otherwise({template:'Couldn\'t match a route!'});
+    });
+</script>
+
+<script type="text/ng-template" id="oldview.html">
+    <div ng-controller="OldController">
+        This is the view with some data: {{myData}}
+    </div>
+    <button ng-click="navigate()">Go to new view</button>
+</script>
+
+<script type="text/ng-template" id="newview.html">
+    <div>This is the NEW view</div>
+</script>
+
+</body>
+</html>
