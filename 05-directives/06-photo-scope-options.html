@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+
+<div ng-controller="MainController">
+    <!-- Element directive -->
+    <div>
+        <input ng-model="photo.date"/>
+        <photo photo-src="{{photo.url}}" caption="Taken on: {{photo.date}}" />
+    </div>
+</div>
+
+<script src="http://code.angularjs.org/1.2.9/angular.js"></script>
+<script>
+    /*
+        Any property we set on scope with the '@' operator will instruct angular to copy any values
+        from parent scope to directive's isolate scope and to forward any further updates. Any change
+        made inside directive scope won't get reflected to the parent scope. This behavior is a sort
+        of 1-way data-binding.
+
+     */
+    var app = angular.module("myapp",[]);
+
+    app.controller('MainController',function($scope){
+        $scope.photo = {
+            url: "http://1.bp.blogspot.com/-OK8gVMu17i0/UAUtYEKrSpI/AAAAAAAAAMQ/1bcg6JFPs9s/s1600/hotel1.jpg",
+            date: "January 1, 2014"
+        }
+    });
+
+    app.directive('photo', function() {
+        return {
+            restrict: 'AECM',
+            templateUrl: "photo.html",
+            replace: true,
+            scope: {
+                caption: '@',
+                photoSrc: '@'
+            }
+        }
+    });
+
+</script>
+
+<script type="text/ng-template" id="photo.html">
+    <figure>
+        <img width="500px" ng-src="{{photoSrc}}"/>
+        <figcaption>{{caption}}</figcaption>
+        <input ng-model="caption"/>
+    </figure>
+</script>
+
+</body>
+</html>

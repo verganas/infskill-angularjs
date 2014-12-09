@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+<div ng-controller="MainController">
+    <input data-ng-model="photo.url">
+    <photo photo-src="{{photo.url}}" caption="Taken on: {{photo.date}}" />
+</div>
+<script src="http://code.angularjs.org/1.2.9/angular.min.js"></script>
+<script type="text/ng-template" id="photo.html">
+    <figure>
+        <img width="500px" ng-src="{{photoSrc}}"/>
+        <figcaption>{{caption}}</figcaption>
+    </figure>
+</script>
+<script>
+    var app = angular.module("myapp",[]);
+
+    app.controller('MainController',function($scope){
+        $scope.photo = {
+            url: "http://1.bp.blogspot.com/-OK8gVMu17i0/UAUtYEKrSpI/AAAAAAAAAMQ/1bcg6JFPs9s/s1600/hotel1.jpg",
+            date: "January 1, 2014"
+        }
+    });
+
+    app.directive('photo', function() {
+        return {
+            restrict: 'E',
+            templateUrl:'photo.html',
+            replace:true,
+            scope: {
+                caption: '@',
+                photoSrc: '@'
+            }
+        }
+    });
+
+</script>
+</body>
+</html>

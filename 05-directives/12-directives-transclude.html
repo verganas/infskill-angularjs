@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+<div ng-controller="MainController">
+    <foo>
+        <h1>This is the original html content!</h1>
+    </foo>
+</div>
+<script src="http://code.angularjs.org/1.2.9/angular.js"></script>
+<script>
+    var app = angular.module("myapp",[]);
+    app.controller('MainController',function($scope){
+    });
+
+    /*
+     In this example we have a directive named foo which has some nested content. By default when this
+     directive is compiled its contents will be replaced with the contents of the template. AngularJS
+     provides a directive option and template marker to define a spot where the original contents will be placed.
+
+     We have to define transclude to true and set some sort of container with ng-transclude in the template.
+    */
+
+    app.directive('foo', function() {
+        return {
+            restrict: 'E',
+            replace: true,
+            transclude:true,
+            templateUrl: 'template.html'
+        }
+    });
+</script>
+
+<script type="text/ng-template" id="template.html">
+    <div>
+        <h3>
+            This is template content!
+        </h3>
+
+        <div ng-transclude/>
+    </div>
+</script>
+</body>
+</html>

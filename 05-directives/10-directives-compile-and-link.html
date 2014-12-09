@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<head>
+    <style>
+        .row {
+            border:solid 1px green;
+            display:table;
+            margin:5px;
+        }
+        .column {
+            border:solid 1px red;
+            margin:5px;
+            float:left;
+        }
+    </style>
+</head>
+<body>
+
+<div ng-controller="MainController">
+    <row>
+        <column>A</column>
+        <column>B</column>
+        <column>
+            <row>C</row>
+            <row>D</row>
+            <row>
+                <column>E</column>
+                <column>F</column>
+            </row>
+        </column>
+    </row>
+</div>
+
+<script src="http://code.angularjs.org/1.2.9/angular.js"></script>
+<script>
+    var app = angular.module("myapp",[]);
+
+    app.controller('MainController',function($scope){
+
+    });
+
+    /*
+         Angular looks for the directives in the DOM and when it founds one it executes the compile
+         and link step for it. The compile step is executed once for all the instances of the directive
+         and doesn't have access to the scope cause it's hasn't been created yet. After the DOM template
+         compilation (trasnformation) it executes the link function on every instance of the directive.
+
+         The link function can be used for:
+
+         • listening to directive attribute changes and propagation with watchers
+         • manipulating a single instance of that directive
+    */
+
+    app.directive('row', function() {
+        return {
+            restrict: 'E',
+            compile: function(tElement, attrs){
+                var content = angular.element('<div class="row"></div>');
+                content.append(tElement.contents());
+                tElement.replaceWith(content);
+            }
+        }
+    });
+
+    app.directive('column', function() {
+        return {
+            restrict: 'E',
+            compile: function(tElement, attrs){
+                var content = angular.element('<div class="column"></div>');
+                content.append(tElement.contents());
+                tElement.replaceWith(content);
+            }
+        }
+    });
+
+</script>
+</body>
+</html>
