@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+<div ng-controller="MainController">
+    <button ng-click="">Click to start a new digest loop</button>
+    <input ng-model="someModel">
+</div>
+
+<script src="http://code.angularjs.org/1.2.9/angular.js"></script>
+<script>
+    (function () {
+        angular.module("myapp", [])
+            .config(function () {
+                console.log("Config has been reached");
+            })
+            .controller('MainController', function ($scope, $timeout, $http) {
+                var counter = 0;
+
+                var makeRequest = function() {
+                    console.log('In-request');
+                    $http({
+                        url: "http://localhost:63342/infskill-angularjs/07-advanced-scope/02-digest.html",
+                        method: "GET"
+                    }).success(function () {
+                        console.log("GET request success!");
+                    });
+                }
+
+                console.log('Pre-watch');
+                $scope.$watch(function() {
+                    console.log('In-watch');
+                    counter += 1;
+                    console.log("Digest has been called", counter, "times");
+                });
+                console.log('Post-watch');
+
+                console.log('Pre-timeout');
+                $timeout(function() {
+                    console.log('In-timeout');
+                    console.log('Pre-request');
+                    makeRequest();
+                    console.log('Post-request');
+                    console.log('End timeout!');
+                 }, 3000);
+                console.log('Post-timeout');
+
+            });
+    })();
+</script>
+
+</body>
+</html>

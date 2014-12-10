@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+    <div ng-controller="MainController">
+        <button ng-click="broadClick('Main')">Main Broadcast</button>
+        <button ng-click="emitClick('Main')">Main Emit</button>
+        <div ng-controller="MiddleController">
+            <button ng-click="broadClick('Middle')">Middle Broadcast</button>
+            <button ng-click="emitClick('Middle')">Middle Emit</button>
+            <div ng-controller="BottomController">
+                <button ng-click="broadClick('Bottom')">Bottom Broadcast</button>
+                <button ng-click="emitClick('Bottom')">Bottom Emit</button>
+            </div>
+        </div>
+    </div>
+
+<script src="http://code.angularjs.org/1.2.9/angular.js"></script>
+<script>
+    /*
+        emit behaves like DOM event bubbling
+        broadcast behaves like DOM event propagate
+
+        We can also emit or broadcast events from rootScope. With this case broadcast propagates all
+        nested scopes, and emit fires an event on self. There's no parent scope for rootScope.
+     */
+    (function() {
+        var app = angular.module("myapp", []);
+        app.controller('MainController', function ($scope) {
+            $scope.$on('myEvent', function (event, src) {
+                console.log("Main sees myEvent from", src)
+            });
+
+            $scope.broadClick = function (origin) {
+                $scope.$broadcast('myEvent', origin)
+            };
+
+            $scope.emitClick = function (origin) {
+                $scope.$emit('myEvent', origin)
+            };
+        });
+
+        app.controller('MiddleController', function ($scope) {
+            $scope.$on('myEvent', function (event, src) {
+                console.log("Middle sees myEvent from", src)
+            });
+
+            $scope.broadClick = function (origin) {
+                $scope.$broadcast('myEvent', origin);
+            };
+
+            $scope.emitClick = function (origin) {
+                $scope.$emit('myEvent', origin);
+            };
+        });
+
+        app.controller('BottomController', function ($scope) {
+            $scope.$on('myEvent', function (event, src) {
+                console.log("Bottom sees myEvent from", src)
+            });
+
+            $scope.broadClick = function (origin) {
+                $scope.$broadcast('myEvent', origin);
+            };
+
+            $scope.emitClick = function (origin) {
+                $scope.$emit('myEvent', origin);
+            };
+        });
+    })();
+</script>
+
+</body>
+</html>

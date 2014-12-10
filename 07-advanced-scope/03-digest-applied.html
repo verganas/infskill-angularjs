@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+<div ng-controller="MainController">
+    <clickable foo="foo"></clickable>
+
+    <button ng-click="update()">Update with implicit $apply()</button>
+    <span ng-show="false" ng-model="val"></span>
+</div>
+
+<script src="http://code.angularjs.org/1.2.9/angular.js"></script>
+<script>
+
+    /*
+
+     In this example we have one directive which updates the parent controller scope's foo variable.
+     It also setups an event but not by using ng-click. It uses jqLite bind to setup a jquery event.
+     This doesn't cause an implicit $scope.$digest to be called. We also got a button inside main controller
+     scope which uses ng-click and updates some other variable.
+
+     When we click the foo button what happens is that the scope.foo property is being updated but the
+     digest loop doesn't run to interpolate the value with {{foo}}. We notice that if we click the update
+     button this causes as a side effect the value to be interpolated cause it causes a digest loop to run.
+
+     */
+
+    (function () {
+        angular.module("myapp", [])
+            .config(function () {
+                console.log("Config has been reached");
+            })
+            .directive('clickable',function() {
+                return {
+                    restrict: "E",
+                    scope: { foo: "=" },
+                    template: '<button>{{foo}}</button>',
+                    link: function(scope, element, attrs) {
+                        element.bind('click', function() {
+                           scope.foo++;
+                        });
+                    }
+                }
+            })
+            .controller('MainController', function ($scope, $timeout, $http) {
+                $scope.foo = 0;
+                $scope.val = "";
+
+                $scope.update = function() {
+                    $scope.val = "garbage123";
+                }
+            });
+    })();
+</script>
+
+</body>
+</html>
