@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+<div ng-controller="MainController">
+
+    <button ng-click="getFromAPI()">Get from API</button>
+    <div>
+        <code>
+            {{ myData }}
+        </code>
+    </div>
+
+</div>
+
+<script src="//code.angularjs.org/1.2.9/angular.js"></script>
+<script src="//code.angularjs.org/1.2.9/angular-resource.js"></script>
+<script>
+    (function () {
+        angular.module("myapp", ['ngResource'])
+            .factory('AngularGit',function($resource) {
+                return $resource('https://api.github.com/repos/angular/angular.js/:category/:sha');
+            })
+            .controller('MainController', function ($scope, AngularGit) {
+                var params = {
+                    category: 'commits',
+                    sha: '80e7a4558490f7ffd33d142844b9153a5ed00e86'
+                };
+                window.AngularGit = AngularGit;()
+                console.log(AngularGit.get(params));
+            });
+    })();
+</script>
+
+</body>
+</html>

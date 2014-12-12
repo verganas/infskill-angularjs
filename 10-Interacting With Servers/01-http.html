@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html data-ng-app="myapp">
+<body>
+<div ng-controller="MainController">
+
+    <button ng-click="getFromAPI()">Get from API</button>
+    <div>
+        <code>
+            {{ myData }}
+        </code>
+    </div>
+
+</div>
+
+<script src="http://code.angularjs.org/1.2.9/angular.js"></script>
+<script>
+    (function () {
+        angular.module("myapp", [])
+            .config(function($httpProvider) {
+                // Any http configuration like changing the POST headers will go here
+                console.log("Default POST content-type:",$httpProvider.defaults.headers.post);
+            })
+            .controller('MainController', function ($scope, $http) {
+                $scope.getFromAPI = function() {
+                    // Shortcut would be to use $http.get('<url>'...
+                    $http({
+                        method: 'GET',
+                        url: 'https://api.github.com/users/angular'
+                    }).success(function(data, status, headers,config) {
+                        console.log('success:',status);
+                        console.log('config:',config);
+                        console.log('headers:',headers());
+                        console.log('data:',data);
+                        $scope.myData = angular.copy(data);
+                    }).error(function(data, status, headers, config) {
+                        console.log('error!',status);
+                        console.log(data);
+                    });
+                }
+            });
+    })();
+</script>
+
+</body>
+</html>
